@@ -39,7 +39,10 @@ public class ClientProcessor implements Runnable {
                 OutputStream out = socket.getOutputStream();
                 PrintWriter pw = new PrintWriter(out, true)) {
 
-            Scanner scanner = new Scanner(System.in);
+            ConsoleReader consoleReader = new ConsoleReader(pw);
+            Thread consoleThread = new Thread(consoleReader);
+            consoleThread.start();
+            
             while (true) {
                 String read = br.readLine();
                 if (read == null) {
@@ -50,11 +53,7 @@ public class ClientProcessor implements Runnable {
                 if (read.equalsIgnoreCase("bye")) {
                     break;
                 }
-
-                String line = scanner.nextLine();
-                pw.println(line);
             }
-
         } catch (IOException ex) {
             LOGGER.log(Level.SEVERE, null, ex);
         }
